@@ -1,0 +1,36 @@
+{
+  "name": "pbu-video-player",
+  "version": "1.0.0",
+  "description": "cc video player",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server --content-base example --devtool eval",
+    "build": "webpack --progress --colors --watch --config webpack.config.js",
+    "prePublishs": "webpack --progress --colors --config webpack.prepublish.config.js"
+  },
+  "keywords": [
+    "cc",
+    "player"
+  ],
+  "author": "Chenzhyc",
+  "license": "MIT",
+  "dependencies": {
+    "append-query": "^2.0.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "css-loader": "^0.28.4",
+    "prop-types": "^15.5.10",
+    "webpack": "^1.13.0",
+    "webpack-dev-server": "^1.14.1"
+  }
+}
