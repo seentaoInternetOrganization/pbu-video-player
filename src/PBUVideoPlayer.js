@@ -11,6 +11,7 @@ const ccPlayerHost = 'https://p.bokecc.com/player';
 const siteId = '5396EEEC83FBF34A';
 const playerType = '1';
 
+
 class PBUVideoPlayer extends Component {
     constructor(props) {
         super(props);
@@ -44,6 +45,11 @@ class PBUVideoPlayer extends Component {
 
     componentDidMount() {
         this.loadScript();
+
+        window.onAsk = function(who) {
+            console.log('onAsk!!!');
+            console.log('who = ', who);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -93,7 +99,7 @@ PBUVideoPlayer.defaultProps = {
     width: 600,
     height: 490,
     autoStart: false,
-    playerid: '87809E07FA32B8AA'
+    playerid: 'F0A0C0ADC1025B99'
 }
 
 
