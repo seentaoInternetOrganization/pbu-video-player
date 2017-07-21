@@ -11,7 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PBUVideoPlayer from 'pbu-video-player';
 
-ReactDOM.render(<PBUVideoPlayer vid={'BB19C515E0F67DD19C33DC5901307461'}/>, mountedDom);
+ReactDOM.render(<PBUVideoPlayer vid={'xxxxxx'}/>, mountedDom);
 ```
 
 #### 参数接口说明
