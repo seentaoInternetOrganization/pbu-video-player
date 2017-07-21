@@ -21549,6 +21549,18 @@
 	var siteId = '5396EEEC83FBF34A';
 	var playerType = '1';
 
+	function getSWF(swfID) {
+	    if (window.document[swfID]) {
+	        return window.document[swfID];
+	    } else if (navigator.appName.indexOf("Microsoft") == -1) {
+	        if (document.embeds && document.embeds[swfID]) {
+	            return document.embeds[swfID];
+	        }
+	    } else {
+	        return document.getElementById(swfID);
+	    }
+	}
+
 	var PBUVideoPlayer = function (_Component) {
 	    _inherits(PBUVideoPlayer, _Component);
 
@@ -21558,6 +21570,7 @@
 	        var _this = _possibleConstructorReturn(this, (PBUVideoPlayer.__proto__ || Object.getPrototypeOf(PBUVideoPlayer)).call(this, props));
 
 	        _this.state = _extends({}, props);
+	        _this.intervalTime = null;
 	        return _this;
 	    }
 
@@ -21568,6 +21581,7 @@
 	            if (this.refs['domRef_' + this.state.vid].hasChildNodes()) {
 	                this.refs['domRef_' + this.state.vid].removeChild(this.refs['domRef_' + this.state.vid].childNodes[0]);
 	            }
+	            window.clearInterval(this.intervalTime);
 
 	            var videoSrc = (0, _appendQuery2.default)(ccPlayerHost, {
 	                vid: this.state.vid,
@@ -21581,17 +21595,70 @@
 
 	            var oScript = document.createElement('script');
 	            oScript.type = 'text/javascript';
+	            oScript.async = true;
 	            oScript.src = videoSrc;
 	            this.refs['domRef_' + this.state.vid].appendChild(oScript);
 	        }
 	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
+	            var _this2 = this;
+
 	            this.loadScript();
 
-	            window.onAsk = function (who) {
-	                console.log('onAsk!!!');
-	                console.log('who = ', who);
+	            window.on_spark_player_stop = function () {
+	                console.log('on_spark_player_stop');
+	                window.clearInterval(_this2.intervalTime);
+	            };
+
+	            window.on_spark_player_pause = function () {
+	                console.log('on_spark_player_pause');
+	                window.clearInterval(_this2.intervalTime);
+	            };
+
+	            window.on_spark_player_resume = function () {
+	                console.log('on_spark_player_resume');
+	            };
+
+	            window.on_spark_player_ready = function () {
+	                console.log('on_spark_player_ready');
+	            };
+
+	            window.on_spark_player_start = function () {
+	                console.log('on_spark_player_start');
+
+	                var totalDuration = _this2.player.getDuration();
+	                console.log('totalDuration = ', totalDuration);
+	                //计时器的频率：如果视频整个时长小于等于2分钟：总时长的20%；如果大于2分钟：固定2分钟；
+	                var intervalTime = 0;
+
+	                if (totalDuration > 120) {
+	                    intervalTime = 120000;
+	                } else {
+	                    intervalTime = totalDuration * 0.2 * 1000;
+	                }
+
+	                _this2.intervalTime = setInterval(function () {
+	                    _this2.props.onCountFrequency(_this2.player.getPosition());
+	                }, intervalTime);
+	            };
+
+	            window.on_player_seek = function () {
+	                console.log('on_player_seek');
+	            };
+
+	            window.on_cc_player_init = function (vid, objectId) {
+	                _this2.player = getSWF(objectId);
+	                var config = {
+	                    on_player_stop: "on_spark_player_stop",
+	                    on_player_pause: "on_spark_player_pause",
+	                    on_player_resume: "on_spark_player_resume",
+	                    on_player_ready: "on_spark_player_ready",
+	                    on_player_start: "on_spark_player_start",
+	                    on_player_seek: "on_spark_player_seek"
+	                };
+
+	                _this2.player.setConfig(config);
 	            };
 	        }
 	    }, {
@@ -21603,6 +21670,11 @@
 	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate() {
 	            this.loadScript();
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            window.clearInterval(this.intervalTime);
 	        }
 	    }, {
 	        key: 'render',
@@ -21634,7 +21706,13 @@
 	    /**
 	     * 播放器id，
 	     */
-	    playerid: _propTypes2.default.string
+	    playerid: _propTypes2.default.string,
+	    /**
+	     * 播放时按固定频率执行的回调
+	     * 计时器的频率：如果视频整个时长小于等于2分钟：总时长的20%；如果大于2分钟：固定2分钟；
+	     * @param currentPosition  当前播放的秒数
+	     */
+	    onCountFrequency: _propTypes2.default.func
 	};
 
 	PBUVideoPlayer.defaultProps = {
@@ -21642,7 +21720,10 @@
 	    width: 600,
 	    height: 490,
 	    autoStart: false,
-	    playerid: 'F0A0C0ADC1025B99'
+	    playerid: 'F0A0C0ADC1025B99',
+	    onCountFrequency: function onCountFrequency(currentPosition) {
+	        console.log('onCountFrequency ', currentPosition);
+	    }
 	};
 
 	exports.default = PBUVideoPlayer;

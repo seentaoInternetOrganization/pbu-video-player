@@ -11,13 +11,25 @@ const ccPlayerHost = 'https://p.bokecc.com/player';
 const siteId = '5396EEEC83FBF34A';
 const playerType = '1';
 
+function getSWF(swfID) {
+    if (window.document[swfID]) {
+        return window.document[swfID];
+    } else if (navigator.appName.indexOf("Microsoft") == -1) {
+        if (document.embeds && document.embeds[swfID]) {
+            return document.embeds[swfID];
+        }
+    } else {
+        return document.getElementById(swfID);
+    }
+}
 
 class PBUVideoPlayer extends Component {
     constructor(props) {
         super(props);
         this.state = {
             ...props
-        }
+        };
+        this.intervalTime = null;
     }
 
     loadScript() {
@@ -25,7 +37,7 @@ class PBUVideoPlayer extends Component {
         if (this.refs[`domRef_${this.state.vid}`].hasChildNodes()) {
             this.refs[`domRef_${this.state.vid}`].removeChild(this.refs[`domRef_${this.state.vid}`].childNodes[0]);
         }
-
+        window.clearInterval(this.intervalTime);
 
         const videoSrc = appendQuery(ccPlayerHost, {
             vid: this.state.vid,
@@ -39,6 +51,7 @@ class PBUVideoPlayer extends Component {
 
         const oScript = document.createElement('script');
         oScript.type = 'text/javascript';
+        oScript.async = true;
         oScript.src = videoSrc;
         this.refs[`domRef_${this.state.vid}`].appendChild(oScript);
     }
@@ -46,9 +59,59 @@ class PBUVideoPlayer extends Component {
     componentDidMount() {
         this.loadScript();
 
-        window.onAsk = function(who) {
-            console.log('onAsk!!!');
-            console.log('who = ', who);
+        window.on_spark_player_stop = () => {
+            console.log('on_spark_player_stop');
+            window.clearInterval(this.intervalTime);
+        }
+
+        window.on_spark_player_pause = () => {
+            console.log('on_spark_player_pause');
+            window.clearInterval(this.intervalTime);
+        }
+
+        window.on_spark_player_resume = () => {
+            console.log('on_spark_player_resume');
+        }
+
+        window.on_spark_player_ready = () => {
+            console.log('on_spark_player_ready');
+        }
+
+        window.on_spark_player_start = () => {
+            console.log('on_spark_player_start');
+
+            const totalDuration = this.player.getDuration();
+            console.log('totalDuration = ', totalDuration);
+            //计时器的频率：如果视频整个时长小于等于2分钟：总时长的20%；如果大于2分钟：固定2分钟；
+            let intervalTime = 0;
+
+            if (totalDuration > 120) {
+                intervalTime = 120000;
+            }else {
+                intervalTime = totalDuration * 0.2 * 1000;
+            }
+
+            this.intervalTime = setInterval(() => {
+                this.props.onCountFrequency(this.player.getPosition());
+            }, intervalTime);
+        }
+
+        window.on_player_seek = () => {
+            console.log('on_player_seek');
+        }
+
+        window.on_cc_player_init = (vid, objectId) => {
+            this.player = getSWF(objectId);
+            const config = {
+                on_player_stop: "on_spark_player_stop",
+                on_player_pause: "on_spark_player_pause",
+                on_player_resume: "on_spark_player_resume",
+                on_player_ready: "on_spark_player_ready",
+                on_player_start: "on_spark_player_start",
+                on_player_seek:  "on_spark_player_seek"
+            }
+
+            this.player.setConfig(config);
         }
     }
 
@@ -61,6 +124,10 @@ class PBUVideoPlayer extends Component {
     componentDidUpdate() {
         this.loadScript();
     }
+
+    componentWillUnmount() {
+		window.clearInterval(this.intervalTime);
+	}
 
     render() {
         return (
@@ -92,6 +159,12 @@ PBUVideoPlayer.propTypes = {
      * 播放器id，
      */
     playerid: PropTypes.string,
+    /**
+     * 播放时按固定频率执行的回调
+     * 计时器的频率：如果视频整个时长小于等于2分钟：总时长的20%；如果大于2分钟：固定2分钟；
+     * @param currentPosition  当前播放的秒数
+     */
+    onCountFrequency: PropTypes.func,
 }
 
 PBUVideoPlayer.defaultProps = {
@@ -99,7 +172,10 @@ PBUVideoPlayer.defaultProps = {
     width: 600,
     height: 490,
     autoStart: false,
-    playerid: 'F0A0C0ADC1025B99'
+    playerid: 'F0A0C0ADC1025B99',
+    onCountFrequency: (currentPosition) => {
+        console.log('onCountFrequency ', currentPosition);
+    }
 }
 
 
