@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import appendQuery from 'append-query';
 
 const ccPlayerHost = 'https://p.bokecc.com/player';
-const siteId = '5396EEEC83FBF34A';
 const playerType = '1';
 
 function getSWF(swfID) {
@@ -81,7 +80,6 @@ class PBUVideoPlayer extends Component {
             console.log('on_spark_player_start');
 
             const totalDuration = this.player.getDuration();
-            console.log('totalDuration = ', totalDuration);
             //计时器的频率：如果视频整个时长小于等于2分钟：总时长的20%；如果大于2分钟：固定2分钟；
             let intervalTime = 0;
 
@@ -140,6 +138,11 @@ class PBUVideoPlayer extends Component {
 
 PBUVideoPlayer.propTypes = {
     /**
+     * siteId
+     */
+    siteId: PropTypes.string.isRequired;
+
+    /**
      * 视频唯一标识符
      */
     vid: PropTypes.string.isRequired,
@@ -168,11 +171,12 @@ PBUVideoPlayer.propTypes = {
 }
 
 PBUVideoPlayer.defaultProps = {
-    vid: 'BB19C515E0F67DD19C33DC5901307461',
+    vid: '',
+    siteId: '',
     width: 600,
     height: 490,
     autoStart: false,
-    playerid: 'F0A0C0ADC1025B99',
+    playerid: '',
     onCountFrequency: (currentPosition) => {
         console.log('onCountFrequency ', currentPosition);
     }
