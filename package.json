@@ -1,6 +1,6 @@
 {
   "name": "pbu-video-player",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "cc video player",
   "main": "index.js",
   "scripts": {
