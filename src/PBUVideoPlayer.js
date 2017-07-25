@@ -140,7 +140,7 @@ PBUVideoPlayer.propTypes = {
     /**
      * siteId
      */
-    siteId: PropTypes.string.isRequired;
+    siteId: PropTypes.string.isRequired,
 
     /**
      * 视频唯一标识符
