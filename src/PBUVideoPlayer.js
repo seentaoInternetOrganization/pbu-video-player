@@ -40,7 +40,7 @@ class PBUVideoPlayer extends Component {
 
         const videoSrc = appendQuery(ccPlayerHost, {
             vid: this.state.vid,
-            siteid: siteId,
+            siteid: this.state.siteId,
             autoStart: this.state.autoStart,
             width: this.state.width,
             height: this.state.height,
