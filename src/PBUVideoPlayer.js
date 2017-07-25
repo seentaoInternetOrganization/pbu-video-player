@@ -119,6 +119,10 @@ class PBUVideoPlayer extends Component {
         });
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.vid !== this.props.vid;
+    }
+
     componentDidUpdate() {
         this.loadScript();
     }

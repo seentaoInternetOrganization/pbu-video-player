@@ -105,7 +105,10 @@
 	                        } },
 	                    'Switch'
 	                ),
-	                _react2.default.createElement(_PBUVideoPlayer2.default, { vid: this.state.vids[this.state.selectedVid] })
+	                _react2.default.createElement(_PBUVideoPlayer2.default, { vid: this.state.vids[this.state.selectedVid],
+	                    siteId: '5396EEEC83FBF34A',
+	                    playerid: 'F0A0C0ADC1025B99'
+	                })
 	            );
 	        }
 	    }]);
@@ -21546,7 +21549,6 @@
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
 	var ccPlayerHost = 'https://p.bokecc.com/player';
-	var siteId = '5396EEEC83FBF34A';
 	var playerType = '1';
 
 	function getSWF(swfID) {
@@ -21585,7 +21587,7 @@
 
 	            var videoSrc = (0, _appendQuery2.default)(ccPlayerHost, {
 	                vid: this.state.vid,
-	                siteid: siteId,
+	                siteid: this.state.siteId,
 	                autoStart: this.state.autoStart,
 	                width: this.state.width,
 	                height: this.state.height,
@@ -21628,7 +21630,6 @@
 	                console.log('on_spark_player_start');
 
 	                var totalDuration = _this2.player.getDuration();
-	                console.log('totalDuration = ', totalDuration);
 	                //计时器的频率：如果视频整个时长小于等于2分钟：总时长的20%；如果大于2分钟：固定2分钟；
 	                var intervalTime = 0;
 
@@ -21667,6 +21668,11 @@
 	            this.setState(_extends({}, nextProps));
 	        }
 	    }, {
+	        key: 'shouldComponentUpdate',
+	        value: function shouldComponentUpdate(nextProps, nextState) {
+	            return nextProps.vid !== this.props.vid;
+	        }
+	    }, {
 	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate() {
 	            this.loadScript();
@@ -21687,6 +21693,11 @@
 	}(_react.Component);
 
 	PBUVideoPlayer.propTypes = {
+	    /**
+	     * siteId
+	     */
+	    siteId: _propTypes2.default.string.isRequired,
+
 	    /**
 	     * 视频唯一标识符
 	     */
@@ -21716,11 +21727,12 @@
 	};
 
 	PBUVideoPlayer.defaultProps = {
-	    vid: 'BB19C515E0F67DD19C33DC5901307461',
+	    vid: '',
+	    siteId: '',
 	    width: 600,
 	    height: 490,
 	    autoStart: false,
-	    playerid: 'F0A0C0ADC1025B99',
+	    playerid: '',
 	    onCountFrequency: function onCountFrequency(currentPosition) {
 	        console.log('onCountFrequency ', currentPosition);
 	    }
