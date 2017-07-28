@@ -61,6 +61,8 @@ class PBUVideoPlayer extends Component {
         window.on_spark_player_stop = () => {
             console.log('on_spark_player_stop');
             window.clearInterval(this.intervalTime);
+            const totalDuration = this.player.getDuration();
+            this.props.onCountFrequency(totalDuration);
         }
 
         window.on_spark_player_pause = () => {
