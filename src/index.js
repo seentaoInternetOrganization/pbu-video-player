@@ -13,6 +13,11 @@ class TestComponent extends Component {
     };
 
     render() {
+
+        const onGetVerificationCode = (vid) => {
+            return vid;
+        }
+        
         return (
             <div>
                 <button type="primary" onClick={() => {
@@ -21,7 +26,13 @@ class TestComponent extends Component {
                     });
                 }}>Switch
                 </button>
-                <PBUVideoPlayer vid={this.state.vids[this.state.selectedVid]} />
+                <PBUVideoPlayer vid={this.state.vids[this.state.selectedVid]}
+                                siteId='5396EEEC83FBF34A'
+                                width={600}
+                                height={490}
+                                playerid='F0A0C0ADC1025B99'
+                                onGetVerificationCode={onGetVerificationCode}
+                            />
             </div>
         )
     }

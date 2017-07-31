@@ -57,6 +57,9 @@ class PBUVideoPlayer extends Component {
 
     componentDidMount() {
         this.loadScript();
+        window.get_cc_verification_code = (vid) => {
+            return this.props.onGetVerificationCode(vid);
+        }
 
         window.on_spark_player_stop = () => {
             console.log('on_spark_player_stop');
@@ -174,6 +177,12 @@ PBUVideoPlayer.propTypes = {
      * @param currentPosition  当前播放的秒数
      */
     onCountFrequency: PropTypes.func,
+    /**
+     * 获取用于鉴权的验证码
+     * @param {string} vid 视频id
+     * @return {string}
+     */
+    onGetVerificationCode: PropTypes.func,
 }
 
 PBUVideoPlayer.defaultProps = {
@@ -185,6 +194,10 @@ PBUVideoPlayer.defaultProps = {
     playerid: '',
     onCountFrequency: (currentPosition) => {
         console.log('onCountFrequency ', currentPosition);
+    },
+    onGetVerificationCode: (vid) => {
+        console.log('vid = ', vid);
+        return vid;
     }
 }
 

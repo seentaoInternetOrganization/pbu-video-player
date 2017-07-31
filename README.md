@@ -48,6 +48,12 @@ PBUVideoPlayer.propTypes = {
      * @param currentPosition  当前播放的秒数
      */
     onCountFrequency: PropTypes.func,
+    /**
+     * 获取用于鉴权的验证码
+     * @param {string} vid 视频id
+     * @return {string}
+     */
+    onGetVerificationCode: PropTypes.func,
 }
 
 ```

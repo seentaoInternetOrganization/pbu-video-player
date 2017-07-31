@@ -93,6 +93,10 @@
 	        value: function render() {
 	            var _this2 = this;
 
+	            var onGetVerificationCode = function onGetVerificationCode(vid) {
+	                return vid;
+	            };
+
 	            return _react2.default.createElement(
 	                'div',
 	                null,
@@ -107,7 +111,10 @@
 	                ),
 	                _react2.default.createElement(_PBUVideoPlayer2.default, { vid: this.state.vids[this.state.selectedVid],
 	                    siteId: '5396EEEC83FBF34A',
-	                    playerid: 'F0A0C0ADC1025B99'
+	                    width: 600,
+	                    height: 490,
+	                    playerid: 'F0A0C0ADC1025B99',
+	                    onGetVerificationCode: onGetVerificationCode
 	                })
 	            );
 	        }
@@ -21607,10 +21614,15 @@
 	            var _this2 = this;
 
 	            this.loadScript();
+	            window.get_cc_verification_code = function (vid) {
+	                return _this2.props.onGetVerificationCode(vid);
+	            };
 
 	            window.on_spark_player_stop = function () {
 	                console.log('on_spark_player_stop');
 	                window.clearInterval(_this2.intervalTime);
+	                var totalDuration = _this2.player.getDuration();
+	                _this2.props.onCountFrequency(totalDuration);
 	            };
 
 	            window.on_spark_player_pause = function () {
@@ -21723,7 +21735,13 @@
 	     * 计时器的频率：如果视频整个时长小于等于2分钟：总时长的20%；如果大于2分钟：固定2分钟；
 	     * @param currentPosition  当前播放的秒数
 	     */
-	    onCountFrequency: _propTypes2.default.func
+	    onCountFrequency: _propTypes2.default.func,
+	    /**
+	     * 获取用于鉴权的验证码
+	     * @param {string} vid 视频id
+	     * @return {string}
+	     */
+	    onGetVerificationCode: _propTypes2.default.func
 	};
 
 	PBUVideoPlayer.defaultProps = {
@@ -21735,6 +21753,10 @@
 	    playerid: '',
 	    onCountFrequency: function onCountFrequency(currentPosition) {
 	        console.log('onCountFrequency ', currentPosition);
+	    },
+	    onGetVerificationCode: function onGetVerificationCode(vid) {
+	        console.log('vid = ', vid);
+	        return vid;
 	    }
 	};
 
