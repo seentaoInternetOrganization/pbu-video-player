@@ -16,11 +16,11 @@
   "author": "Chenzhyc",
   "license": "MIT",
   "dependencies": {
-    "append-query": "^2.0.1",
-    "react": "^15.3.2",
-    "react-dom": "^15.3.2"
+    "append-query": "^2.0.1"
   },
   "devDependencies": {
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
